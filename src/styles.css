@@ -269,3 +269,59 @@
   }
 }
 
+
+@utility arch-frame {
+  border-radius: 50% 50% var(--radius) var(--radius) / 28% 28% var(--radius) var(--radius);
+}
+
+@utility paper-grain {
+  position: relative;
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: var(--paper-url);
+    background-size: 520px;
+  }
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(1.5deg);
+  }
+}
+
+@keyframes shimmer-sweep {
+  from {
+    background-position: 200% center;
+  }
+  to {
+    background-position: -200% center;
+  }
+}
+
+@utility animate-drift {
+  animation: drift 9s ease-in-out infinite;
+}
+
+@utility text-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-gold-deep) 20%,
+    var(--color-gold) 40%,
+    oklch(0.88 0.06 88) 50%,
+    var(--color-gold) 60%,
+    var(--color-gold-deep) 80%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  color: transparent;
+  animation: shimmer-sweep 9s linear infinite;
+}
