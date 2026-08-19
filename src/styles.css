@@ -132,13 +132,135 @@
   --sidebar-ring: oklch(0.551 0.027 264.364);
 }
 
+@theme {
+  --font-display: "Cormorant Garamond", serif;
+  --font-script: "Great Vibes", cursive;
+  --font-body: "Karla", sans-serif;
+  --color-gold: oklch(0.72 0.11 78);
+  --color-gold-deep: oklch(0.58 0.1 70);
+  --color-ivory: oklch(0.977 0.014 92);
+  --color-ink: oklch(0.24 0.012 60);
+}
+
+:root {
+  --background: oklch(0.977 0.014 92);
+  --foreground: oklch(0.24 0.012 60);
+  --card: oklch(0.99 0.008 92);
+  --card-foreground: oklch(0.24 0.012 60);
+  --primary: oklch(0.58 0.1 70);
+  --primary-foreground: oklch(0.99 0.008 92);
+  --secondary: oklch(0.94 0.02 90);
+  --secondary-foreground: oklch(0.24 0.012 60);
+  --muted: oklch(0.94 0.02 90);
+  --muted-foreground: oklch(0.48 0.02 70);
+  --accent: oklch(0.72 0.11 78);
+  --accent-foreground: oklch(0.24 0.012 60);
+  --border: oklch(0.86 0.04 84);
+  --input: oklch(0.86 0.04 84);
+  --ring: oklch(0.72 0.11 78);
+  --radius: 0.25rem;
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
   }
 }
+
+@utility gold-line {
+  background-image: linear-gradient(
+    to right,
+    transparent,
+    var(--color-gold),
+    transparent
+  );
+}
+
+@utility text-gold-gradient {
+  background-image: linear-gradient(
+    100deg,
+    var(--color-gold-deep),
+    var(--color-gold),
+    var(--color-gold-deep)
+  );
+  background-clip: text;
+  color: transparent;
+}
+
+@utility card-ornate {
+  background-color: var(--color-card);
+  border: 1px solid color-mix(in oklab, var(--color-gold) 45%, transparent);
+  box-shadow: 0 18px 50px -30px color-mix(in oklab, var(--color-gold-deep) 60%, transparent);
+}
+
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes fade-in-slow {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes float-petal {
+  0% {
+    transform: translateY(0) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-110vh) rotate(240deg);
+    opacity: 0;
+  }
+}
+
+@utility animate-reveal {
+  animation: reveal-up 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@utility animate-soft-fade {
+  animation: fade-in-slow 1.6s ease both;
+}
+
+@utility reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+
+  &.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
