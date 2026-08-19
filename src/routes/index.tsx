@@ -197,7 +197,7 @@ function Invitation() {
   if (loading) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-6 bg-background">
-        <div className="h-20 w-20 animate-[fade-in-slow_1.2s_ease_infinite_alternate] rounded-full border border-gold/50 border-t-gold" />
+        <div className="h-20 w-20 animate-spin [animation-duration:2.4s] rounded-full border border-gold/50 border-t-gold" />
         <p className="font-display text-sm uppercase tracking-[0.4em] text-gold-deep">
           Bismillah
         </p>
