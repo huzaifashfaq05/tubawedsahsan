@@ -454,7 +454,6 @@
     radial-gradient(circle at 34% 28%, color-mix(in oklab, var(--color-wax) 76%, var(--color-gold)), var(--color-wax) 62%),
     var(--color-wax);
   box-shadow: 0 8px 20px color-mix(in oklab, var(--color-ink) 45%, transparent), inset 0 0 0 4px color-mix(in oklab, var(--color-wax) 84%, var(--color-gold));
-  animation: seal-breathe 2.6s ease-in-out infinite;
   transition: opacity 0.25s ease, transform 0.25s ease;
 }
 
@@ -463,6 +462,7 @@
   inset: 9px;
   border: 1px solid color-mix(in oklab, var(--color-gold) 55%, transparent);
   border-radius: 50%;
+  animation: seal-breathe 2.6s ease-in-out infinite;
 }
 
 .is-opening .wax-seal {
@@ -485,12 +485,8 @@
 }
 
 @keyframes seal-breathe {
-  0%, 100% {
-    box-shadow: 0 8px 20px color-mix(in oklab, var(--color-ink) 45%, transparent), inset 0 0 0 4px color-mix(in oklab, var(--color-wax) 84%, var(--color-gold));
-  }
-  50% {
-    box-shadow: 0 8px 28px color-mix(in oklab, var(--color-gold) 42%, transparent), inset 0 0 0 4px color-mix(in oklab, var(--color-wax) 76%, var(--color-gold));
-  }
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
 }
 
 @keyframes invitation-enter {
