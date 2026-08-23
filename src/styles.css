@@ -485,8 +485,12 @@
 }
 
 @keyframes seal-breathe {
-  0%, 100% { transform: translate(-50%, -50%) scale(1); }
-  50% { transform: translate(-50%, -50%) scale(1.06); }
+  0%, 100% {
+    box-shadow: 0 8px 20px color-mix(in oklab, var(--color-ink) 45%, transparent), inset 0 0 0 4px color-mix(in oklab, var(--color-wax) 84%, var(--color-gold));
+  }
+  50% {
+    box-shadow: 0 8px 28px color-mix(in oklab, var(--color-gold) 42%, transparent), inset 0 0 0 4px color-mix(in oklab, var(--color-wax) 76%, var(--color-gold));
+  }
 }
 
 @keyframes invitation-enter {
