@@ -8,7 +8,9 @@ import botanical from "@/assets/botanical.png";
 import paper from "@/assets/paper-texture.jpg";
 import { Petals } from "@/components/invitation/Petals";
 import { Countdown } from "@/components/invitation/Countdown";
+import { OpeningEnvelope } from "@/components/invitation/OpeningEnvelope";
 import { useReveal } from "@/components/invitation/useReveal";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/")({
   component: Invitation,
@@ -30,6 +32,7 @@ export const Route = createFileRoute("/")({
           "Tuesday, 03rd November 2026 · Paradise Banquet Hall, Dhampur Road, Nagina.",
       },
       { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       { property: "og:url", content: "/" },
     ],
     links: [{ rel: "canonical", href: "/" }],
@@ -134,9 +137,9 @@ function GoldButton({
       </a>
     );
   return (
-    <button type="button" onClick={onClick} className={cls}>
+    <Button type="button" variant="ghost" onClick={onClick} className={cls}>
       {children}
-    </button>
+    </Button>
   );
 }
 
@@ -216,61 +219,41 @@ function useAmbientMusic() {
 }
 
 function Invitation() {
-  const [loading, setLoading] = useState(true);
+  const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
   const { playing, toggle } = useAmbientMusic();
   useReveal(opened);
 
-  useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 1500);
-    return () => clearTimeout(t);
-  }, []);
-
   const openInvitation = () => {
-    setOpened(true);
-    requestAnimationFrame(() =>
-      setTimeout(
-        () =>
-          document
-            .getElementById("invitation")
-            ?.scrollIntoView({ behavior: "smooth" }),
-        60,
-      ),
-    );
+    if (opening || opened) return;
+    setOpening(true);
+    window.setTimeout(() => {
+      setOpened(true);
+      window.scrollTo({ top: 0, behavior: "instant" });
+    }, 1100);
   };
-
-  if (loading) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-7 bg-background">
-        <div className="relative grid h-24 w-24 place-items-center">
-          <span className="absolute inset-0 animate-spin rounded-full border border-gold/25 border-t-gold [animation-duration:2.6s]" />
-          <span className="font-script text-2xl text-gold-deep">T &amp; M</span>
-        </div>
-        <p className="animate-soft-fade font-body text-[0.6rem] uppercase tracking-[0.5em] text-sage-deep">
-          Bismillah
-        </p>
-      </div>
-    );
-  }
 
   return (
     <main
-      className="paper-grain relative overflow-x-hidden"
+      className={`paper-grain relative overflow-x-hidden ${opened ? "invitation-revealed" : "h-[100svh] overflow-hidden"}`}
       style={{ ["--paper-url" as string]: `url(${paper})` }}
     >
-      <Petals />
+      {!opened && <OpeningEnvelope opening={opening} onOpen={openInvitation} />}
+      {opened && <Petals />}
 
-      <button
+      {opened && <Button
         type="button"
+        variant="ghost"
+        size="icon"
         onClick={toggle}
         aria-label={playing ? "Mute music" : "Play music"}
         className="fixed right-4 top-4 z-30 grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gold/50 bg-card/85 text-gold-deep shadow-sm backdrop-blur transition-colors hover:bg-gold/10"
       >
         {playing ? <Volume2 size={16} /> : <VolumeX size={16} />}
-      </button>
+      </Button>}
 
       {/* Hero */}
-      <section className="relative flex min-h-[100svh] items-center justify-center px-4 py-16">
+      {opened && <section className="hero-unveil relative flex min-h-[94svh] items-center justify-center px-4 py-12 sm:py-16">
         <div
           className="absolute inset-0 bg-cover bg-center"
           style={{ backgroundImage: `url(${heroBg})` }}
@@ -278,7 +261,7 @@ function Invitation() {
         <div className="absolute inset-0 bg-background/55" />
 
         <div className="relative z-10 mx-auto w-full max-w-xl">
-          <div className="arch-frame animate-reveal border border-gold/45 bg-card/55 px-6 py-14 text-center shadow-[0_40px_90px_-60px_var(--color-gold-deep)] backdrop-blur-[2px] sm:px-12 sm:py-20">
+          <div className="arch-frame invitation-border animate-reveal border border-gold/45 bg-card/70 px-6 py-12 text-center shadow-[0_40px_90px_-60px_var(--color-gold-deep)] backdrop-blur-[2px] sm:px-12 sm:py-16">
             <p className="font-display text-sm italic leading-relaxed text-ink/75 sm:text-base">
               In the name of "ALLAH" the most beneficent and the most merciful
             </p>
@@ -287,13 +270,11 @@ function Invitation() {
 
             <h1 className="font-script text-[3.25rem] leading-[1.05] text-shimmer sm:text-7xl">
               Tuba Shamsi
+              <span className="my-3 block font-display text-sm uppercase tracking-[0.55em] text-sage-deep">
+                Weds
+              </span>
+              <span className="block">Mohd Ahsan</span>
             </h1>
-            <p className="my-3 font-display text-sm uppercase tracking-[0.55em] text-sage-deep">
-              Weds
-            </p>
-            <p className="font-script text-[3.25rem] leading-[1.05] text-shimmer sm:text-7xl">
-              Mohd Ahsan
-            </p>
 
             <div className="gold-line mx-auto my-7 h-px w-2/3" />
 
@@ -304,16 +285,14 @@ function Invitation() {
               Paradise Banquet Hall, Nagina
             </p>
 
-            <div className="mt-9">
-              <GoldButton onClick={openInvitation} solid>
-                Open Invitation
-              </GoldButton>
-            </div>
+            <p className="mt-7 font-body text-[0.55rem] uppercase tracking-[0.38em] text-gold-deep">
+              Scroll to celebrate with us
+            </p>
           </div>
 
           <Botanical className="animate-drift mx-auto -mt-6 w-56 opacity-90 sm:w-72" />
         </div>
-      </section>
+      </section>}
 
       {opened && (
         <>

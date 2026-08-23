@@ -77,14 +77,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Tuba Shamsi & Moahd Ahsan — Wedding Invitation" },
+      { title: "Tuba Shamsi & Mohd Ahsan — Wedding Invitation" },
       {
         name: "description",
         content:
-          "Wedding invitation of Tuba Shamsi & Moahd Ahsan — Tuesday, 03rd November 2026 at Paradise Banquet Hall, Dhampur Road, Nagina.",
+          "Wedding invitation of Tuba Shamsi & Mohd Ahsan — Tuesday, 03rd November 2026 at Paradise Banquet Hall, Dhampur Road, Nagina.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:site_name", content: "Tuba Shamsi & Moahd Ahsan" },
+      { property: "og:site_name", content: "Tuba Shamsi & Mohd Ahsan" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
