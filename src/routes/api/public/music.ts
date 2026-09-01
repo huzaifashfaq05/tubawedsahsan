@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 const MUSIC_PROMPT =
-  "Soft, gentle instrumental background music for an elegant wedding invitation website. Warm felt piano, soft legato strings, subtle oud, airy pads. Serene, romantic, slow tempo, calming ambient mood. No vocals, no drums, seamless gentle feel.";
+  "Soft gentle romantic wedding background music loop: warm felt piano melody with soft legato strings and airy ambient pads, serene, slow tempo, calming, instrumental, no vocals, no drums, seamless smooth loop.";
 
 let cachedAudio: ArrayBuffer | null = null;
 let pending: Promise<ArrayBuffer> | null = null;
@@ -14,17 +14,22 @@ async function generateMusic(): Promise<ArrayBuffer> {
     const apiKey = process.env["ELEVENLABS_API_KEY"];
     if (!apiKey) throw new Error("ElevenLabs is not connected to this project");
 
-    const response = await fetch("https://api.elevenlabs.io/v1/music", {
-      method: "POST",
-      headers: {
-        "xi-api-key": apiKey,
-        "Content-Type": "application/json",
+    const response = await fetch(
+      "https://api.elevenlabs.io/v1/sound-generation",
+      {
+        method: "POST",
+        headers: {
+          "xi-api-key": apiKey,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          text: MUSIC_PROMPT,
+          duration_seconds: 22,
+          prompt_influence: 0.5,
+          loop: true,
+        }),
       },
-      body: JSON.stringify({
-        prompt: MUSIC_PROMPT,
-        duration_seconds: 90,
-      }),
-    });
+    );
 
     if (!response.ok) {
       const err = await response.text();
