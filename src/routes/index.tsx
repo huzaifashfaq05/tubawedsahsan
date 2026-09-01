@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { CalendarPlus, MapPin, Share2, Volume2, VolumeX } from "lucide-react";
+import { CalendarPlus, Loader2, MapPin, Share2, Volume2, VolumeX } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpg";
 import divider from "@/assets/divider.png";
@@ -183,45 +183,48 @@ async function shareInvitation() {
   await navigator.clipboard?.writeText(window.location.href);
 }
 
-function useAmbientMusic() {
-  const ctxRef = useRef<AudioContext | null>(null);
-  const [playing, setPlaying] = useState(false);
+const MUSIC_URL = "/api/public/music";
 
-  const toggle = () => {
-    if (playing) {
-      ctxRef.current?.close();
-      ctxRef.current = null;
+function useAmbientMusic() {
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playing, setPlaying] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const toggle = async () => {
+    if (loading) return;
+    if (playing && audioRef.current) {
+      audioRef.current.pause();
       setPlaying(false);
       return;
     }
-    const Ctx = window.AudioContext;
-    if (!Ctx) return;
-    const ctx = new Ctx();
-    const gain = ctx.createGain();
-    gain.gain.value = 0;
-    gain.connect(ctx.destination);
-    gain.gain.linearRampToValueAtTime(0.05, ctx.currentTime + 2);
-    [220, 277.18, 329.63].forEach((f, i) => {
-      const osc = ctx.createOscillator();
-      osc.type = "sine";
-      osc.frequency.value = f;
-      const lfo = ctx.createGain();
-      lfo.gain.value = 0.4 - i * 0.1;
-      osc.connect(lfo).connect(gain);
-      osc.start();
-    });
-    ctxRef.current = ctx;
-    setPlaying(true);
+    try {
+      if (!audioRef.current) {
+        setLoading(true);
+        const res = await fetch(MUSIC_URL);
+        if (!res.ok) throw new Error(`Music request failed: ${res.status}`);
+        const blob = await res.blob();
+        const audio = new Audio(URL.createObjectURL(blob));
+        audio.loop = true;
+        audio.volume = 0.45;
+        audioRef.current = audio;
+      }
+      await audioRef.current.play();
+      setPlaying(true);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  useEffect(() => () => void ctxRef.current?.close(), []);
-  return { playing, toggle };
+  useEffect(() => () => void audioRef.current?.pause(), []);
+  return { playing, loading, toggle };
 }
 
 function Invitation() {
   const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
-  const { playing, toggle } = useAmbientMusic();
+  const { playing, loading, toggle } = useAmbientMusic();
   useReveal(opened);
 
   const openInvitation = () => {
@@ -249,7 +252,7 @@ function Invitation() {
         aria-label={playing ? "Mute music" : "Play music"}
         className="fixed right-4 top-4 z-30 grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gold/50 bg-card/85 text-gold-deep shadow-sm backdrop-blur transition-colors hover:bg-gold/10"
       >
-        {playing ? <Volume2 size={16} /> : <VolumeX size={16} />}
+        {loading ? <Loader2 size={16} className="animate-spin" /> : playing ? <Volume2 size={16} /> : <VolumeX size={16} />}
       </Button>}
 
       {/* Hero */}
