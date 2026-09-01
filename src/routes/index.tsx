@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CalendarPlus, Loader2, MapPin, Share2, Volume2, VolumeX } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpg";
