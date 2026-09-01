@@ -466,8 +466,8 @@ function Invitation() {
             </p>
             <p className="mt-4 font-body text-sm tracking-wider text-ink/80">
               Mob.:{" "}
-              <a href="tel:9897653118" className="hover:text-gold-deep">
-                9897653118
+              <a href="tel:9897695318" className="hover:text-gold-deep">
+                9897695318
               </a>
               ,{" "}
               <a href="tel:9068119926" className="hover:text-gold-deep">
