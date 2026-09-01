@@ -245,7 +245,7 @@ function useAmbientMusic() {
 function Invitation() {
   const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
-  const { playing, loading, toggle } = useAmbientMusic();
+  const { playing, loading, toggle, play } = useAmbientMusic();
   useReveal(opened);
 
   const openInvitation = () => {
@@ -256,6 +256,12 @@ function Invitation() {
       window.scrollTo({ top: 0, behavior: "instant" });
     }, 1100);
   };
+
+  useEffect(() => {
+    if (opened) {
+      play();
+    }
+  }, [opened, play]);
 
   return (
     <main
