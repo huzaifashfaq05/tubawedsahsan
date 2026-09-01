@@ -224,7 +224,7 @@ function useAmbientMusic() {
 function Invitation() {
   const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
-  const { playing, toggle } = useAmbientMusic();
+  const { playing, loading, toggle } = useAmbientMusic();
   useReveal(opened);
 
   const openInvitation = () => {
@@ -252,7 +252,7 @@ function Invitation() {
         aria-label={playing ? "Mute music" : "Play music"}
         className="fixed right-4 top-4 z-30 grid h-11 w-11 shrink-0 place-items-center rounded-full border border-gold/50 bg-card/85 text-gold-deep shadow-sm backdrop-blur transition-colors hover:bg-gold/10"
       >
-        {playing ? <Volume2 size={16} /> : <VolumeX size={16} />}
+        {loading ? <Loader2 size={16} className="animate-spin" /> : playing ? <Volume2 size={16} /> : <VolumeX size={16} />}
       </Button>}
 
       {/* Hero */}
