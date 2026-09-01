@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { CalendarPlus, MapPin, Share2, Volume2, VolumeX } from "lucide-react";
+import { CalendarPlus, Loader2, MapPin, Share2, Volume2, VolumeX } from "lucide-react";
 
 import heroBg from "@/assets/hero-bg.jpg";
 import divider from "@/assets/divider.png";
