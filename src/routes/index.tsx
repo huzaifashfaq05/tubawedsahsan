@@ -189,6 +189,44 @@ function useAmbientMusic() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
+  const fetchingRef = useRef(false);
+
+  const ensureAudio = async () => {
+    if (audioRef.current) return audioRef.current;
+    if (fetchingRef.current) {
+      // Wait briefly for the in-flight fetch to finish
+      while (fetchingRef.current) {
+        await new Promise((r) => setTimeout(r, 50));
+      }
+      return audioRef.current!;
+    }
+    fetchingRef.current = true;
+    setLoading(true);
+    try {
+      const res = await fetch(MUSIC_URL);
+      if (!res.ok) throw new Error(`Music request failed: ${res.status}`);
+      const blob = await res.blob();
+      const audio = new Audio(URL.createObjectURL(blob));
+      audio.loop = true;
+      audio.volume = 0.45;
+      audioRef.current = audio;
+    } finally {
+      fetchingRef.current = false;
+      setLoading(false);
+    }
+    return audioRef.current!;
+  };
+
+  const play = useCallback(async () => {
+    if (audioRef.current && !audioRef.current.paused) return;
+    try {
+      const audio = await ensureAudio();
+      await audio.play();
+      setPlaying(true);
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   const toggle = async () => {
     if (loading) return;
@@ -197,28 +235,11 @@ function useAmbientMusic() {
       setPlaying(false);
       return;
     }
-    try {
-      if (!audioRef.current) {
-        setLoading(true);
-        const res = await fetch(MUSIC_URL);
-        if (!res.ok) throw new Error(`Music request failed: ${res.status}`);
-        const blob = await res.blob();
-        const audio = new Audio(URL.createObjectURL(blob));
-        audio.loop = true;
-        audio.volume = 0.45;
-        audioRef.current = audio;
-      }
-      await audioRef.current.play();
-      setPlaying(true);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
+    await play();
   };
 
   useEffect(() => () => void audioRef.current?.pause(), []);
-  return { playing, loading, toggle };
+  return { playing, loading, toggle, play };
 }
 
 function Invitation() {
